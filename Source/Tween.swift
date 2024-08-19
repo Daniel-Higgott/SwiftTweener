@@ -95,17 +95,12 @@ public class Tween<T>: AnyTween
     /// To keys public accesor.
     public var to:[TweenKey<T>]{
         set {
-            _to = newValue
+            _to.append(contentsOf: newValue)
             //Update values.
             updateValues()
         }
         /// Returns cleaned keys.
         get {return _to}
-    }
-    
-    public func add(to: [TweenKey<T>]) {
-        _to.append(contentsOf: to)
-        updateValues()
     }
     
     /**
