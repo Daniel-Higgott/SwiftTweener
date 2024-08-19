@@ -165,4 +165,27 @@ public class BasicMath
             (3 * (1 - t) * pow(t, 2) * c) +
             (pow(t, 3) * d)
     }
+    
+    /// Circular interpolation
+    
+    static func nonNegativeTruncatingRemainder(x: Double, dividingBy: Double) -> Double {
+        let y = x.truncatingRemainder(dividingBy: dividingBy)
+        if y < 0 {
+            return y + dividingBy
+        } else {
+            return y
+        }
+    }
+    
+    static func positiveMovementInDegrees(start: Double, end: Double) -> Bool {
+        let forwardGap = nonNegativeTruncatingRemainder(x: end - start, dividingBy: 360.0)
+        let backwardGap = nonNegativeTruncatingRemainder(x: start - end, dividingBy: 360.0)
+
+        if forwardGap < backwardGap {
+            return true
+        } else {
+            return false
+        }
+    }
+    
 }

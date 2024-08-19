@@ -129,6 +129,8 @@ struct TweenArray
     let from:Array<Double>
     ///A a Double Type Array to store 'to' values.
     let to:Array<Double>
+    ///A a Double Type Array to store 'offset' values. Useful for offsetting circular animations
+    let offset:Double
 }
 
 /**

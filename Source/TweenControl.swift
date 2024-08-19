@@ -300,7 +300,8 @@ class Control<T>: TweenControl
                 for (index, b) in values.from.enumerated()
                 {
                     let c = values.to[ index ] - b
-                    i.append(self.tween.ease.equation(t, b, c, d))
+                    let interpolatedValue = self.tween.ease.equation(t, b, c, d) + values.offset
+                    i.append(interpolatedValue)
                 }
             }
             

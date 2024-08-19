@@ -12,10 +12,12 @@ public struct TweenKey<T>{
     let keyPath:PartialKeyPath<T>
     ///Value
     let value:Any
+    /// true if we are animating through 360 degrees
+    let isCircular:Bool
     
     ///Safe static initilaizer, validates same Value type, adds more context to PartialKeyPath and reduces syntax.
-    public static func key<Value>(_ k:KeyPath<T, Value>, _ v:Value) -> TweenKey<T>{
-        return TweenKey(keyPath: k, value: v)
+    public static func key<Value>(_ k:KeyPath<T, Value>, _ v:Value, _ c:Bool = false) -> TweenKey<T>{
+        return TweenKey(keyPath: k, value: v, isCircular: c)
     }
 }
 
@@ -340,6 +342,8 @@ public class Tween<T>: AnyTween
                 
                 let keyType  = type(of: key.keyPath).valueType
                 
+                var offset = 0.0
+                
                 if type( of:keyType ) == type(of: t) {
 
                     let intepreter = SupportedTypes.interpreters[j]
@@ -377,8 +381,20 @@ public class Tween<T>: AnyTween
                     
                     if to == nil { print("Warning: Couldn't read 'to' values") }
                     
+                    if key.isCircular, let firstTo = to?.first, let firstFrom = from?.first {
+                        if BasicMath.positiveMovementInDegrees(start: firstFrom, end: firstTo) {
+                            offset = 360.0 - firstFrom
+                            from?[0] = 0.0
+                            to?[0] = firstTo + offset
+                        } else {
+                            offset = BasicMath.nonNegativeTruncatingRemainder(x: 360.0, dividingBy: firstTo)
+                            from?[0] = firstFrom + offset
+                            to?[0] = 0.0
+                        }
+                    }
+                    
                     //Add valid keys only.
-                    if from?.count == to?.count { validKeys[key.keyPath] = TweenArray(from:from!, to:to!) }
+                    if from?.count == to?.count { validKeys[key.keyPath] = TweenArray(from:from!, to:to!, offset: offset) }
                     
                     //Typa found, break iteration.
                     break
