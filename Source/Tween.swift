@@ -103,6 +103,11 @@ public class Tween<T>: AnyTween
         get {return _to}
     }
     
+    public func add(to: [TweenKey<T>]) {
+        _to.append(contentsOf: to)
+        updateValues()
+    }
+    
     /**
     Creates a descartable Tween.
      - Parameter target: Required, target instance to perform animations.
