@@ -284,7 +284,7 @@ class Control<T>: TweenControl
             {
                 //Tween completed, set complete values
 //                i = values.to
-                if self.tween.to.first?.isCircular == true {
+                if values.offset != 0.0 {
                     for value in values.to {
                         i.append(BasicMath.nonNegativeTruncatingRemainder(x: value - values.offset, dividingBy: 360.0))
                     }
@@ -308,7 +308,7 @@ class Control<T>: TweenControl
                 for (index, b) in values.from.enumerated()
                 {
                     let c = values.to[ index ] - b
-                    if self.tween.to.first?.isCircular == true {
+                    if values.offset != 0.0 {
                         let interpolatedValue = BasicMath.nonNegativeTruncatingRemainder(x: self.tween.ease.equation(t, b, c, d) - values.offset, dividingBy: 360.0)
                         //let interpolatedValue = self.tween.ease.equation(t, b, c, d)
                         i.append(interpolatedValue)
