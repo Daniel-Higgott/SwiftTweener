@@ -284,9 +284,14 @@ class Control<T>: TweenControl
             {
                 //Tween completed, set complete values
 //                i = values.to
-                for value in values.to {
-                    i.append(BasicMath.nonNegativeTruncatingRemainder(x: value - values.offset, dividingBy: 360.0))
+                if self.tween.to.first?.isCircular == true {
+                    for value in values.to {
+                        i.append(BasicMath.nonNegativeTruncatingRemainder(x: value - values.offset, dividingBy: 360.0))
+                    }
+                } else {
+                    i = values.to
                 }
+                
             }
             else if time < self.timeStart
             {
@@ -303,9 +308,14 @@ class Control<T>: TweenControl
                 for (index, b) in values.from.enumerated()
                 {
                     let c = values.to[ index ] - b
-                    let interpolatedValue = BasicMath.nonNegativeTruncatingRemainder(x: self.tween.ease.equation(t, b, c, d) - values.offset, dividingBy: 360.0)
-                    //let interpolatedValue = self.tween.ease.equation(t, b, c, d)
-                    i.append(interpolatedValue)
+                    if self.tween.to.first?.isCircular == true {
+                        let interpolatedValue = BasicMath.nonNegativeTruncatingRemainder(x: self.tween.ease.equation(t, b, c, d) - values.offset, dividingBy: 360.0)
+                        //let interpolatedValue = self.tween.ease.equation(t, b, c, d)
+                        i.append(interpolatedValue)
+                    } else {
+                        i.append(self.tween.ease.equation(t, b, c, d))
+                    }
+                    
                 }
             }
             
