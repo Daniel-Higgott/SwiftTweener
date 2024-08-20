@@ -283,7 +283,10 @@ class Control<T>: TweenControl
             if time >= self.timeComplete
             {
                 //Tween completed, set complete values
-                i = values.to
+//                i = values.to
+                for value in values.to {
+                    i.append(BasicMath.nonNegativeTruncatingRemainder(x: value - values.offset, dividingBy: 360.0))
+                }
             }
             else if time < self.timeStart
             {
