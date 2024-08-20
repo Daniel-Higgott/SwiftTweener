@@ -300,7 +300,8 @@ class Control<T>: TweenControl
                 for (index, b) in values.from.enumerated()
                 {
                     let c = values.to[ index ] - b
-                    let interpolatedValue = self.tween.ease.equation(t, b, c, d) + values.offset
+                    let interpolatedValue = BasicMath.nonNegativeTruncatingRemainder(x: self.tween.ease.equation(t, b, c, d), dividingBy: 360.0)
+                    //let interpolatedValue = self.tween.ease.equation(t, b, c, d)
                     i.append(interpolatedValue)
                 }
             }

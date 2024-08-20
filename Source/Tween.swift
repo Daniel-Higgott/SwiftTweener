@@ -343,6 +343,7 @@ public class Tween<T>: AnyTween
                 let keyType  = type(of: key.keyPath).valueType
                 
                 var offset = 0.0
+                let modulus = 360.0
                 
                 if type( of:keyType ) == type(of: t) {
 
@@ -382,15 +383,22 @@ public class Tween<T>: AnyTween
                     if to == nil { print("Warning: Couldn't read 'to' values") }
                     
                     if key.isCircular, let firstTo = to?.first, let firstFrom = from?.first {
-                        if BasicMath.positiveMovementInDegrees(start: firstFrom, end: firstTo) {
-                            offset = 360.0 - firstFrom
+                        
+                        let forwardGap = BasicMath.nonNegativeTruncatingRemainder(x: firstTo - firstFrom, dividingBy: modulus)
+                        let backwardGap = BasicMath.nonNegativeTruncatingRemainder(x: firstFrom - firstTo, dividingBy: modulus)
+                        
+                        // we're moving forward but the destination is a lower number that the start - therefore we are traveling through 0
+                        if (forwardGap < backwardGap) && (firstTo < firstFrom) {
+                            offset = modulus - firstFrom
                             from?[0] = 0.0
                             to?[0] = firstTo + offset
-                        } else {
-                            offset = BasicMath.nonNegativeTruncatingRemainder(x: 360.0, dividingBy: firstTo)
+                        // We're moving backwards and the destination is greater than the start - therefore we are traveling through 0
+                        } else if (forwardGap > backwardGap) && (firstTo > firstFrom) {
+                            offset = BasicMath.nonNegativeTruncatingRemainder(x: modulus, dividingBy: firstTo)
                             from?[0] = firstFrom + offset
                             to?[0] = 0.0
                         }
+                        
                     }
                     
                     //Add valid keys only.
